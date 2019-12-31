@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.shoppingmall.common.EmailBindingObject;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
@@ -92,10 +93,10 @@ public class MemberDao {
 	 */
 	public void update(Member member){
 		String sql = "update member  set mobile=?,pwd=?,real_name=?,nick_name=?,"
-				+ "email=?,gender=?,register_time=? where id=?";
+				+ "gender=?,register_time=? where id=?";
 		
 		Object[] params = { member.getMobile(), member.getPwd(), 
-				member.getReal_name(), member.getNick_name(), member.getEmail(), 
+				member.getReal_name(), member.getNick_name(),
 				member.isGender(), member.getRegister_time(), member.getId()
 		};
 		
@@ -115,12 +116,29 @@ public class MemberDao {
 		} 
 		
 	}
-	
-	/**
-	 * 根据ID获取该会员对象
-	 * @param id 会员对象的ID
-	 * @return 返回指定编号的会员对象
-	 */
+
+	public void updateEmail(EmailBindingObject ebo) {
+		String sql = "update member set email=? where id=?";
+
+		Connection conn = null;
+		try {
+			conn = DbHelper.getConn(); //获取连接
+			conn.setAutoCommit(false); //启动事务
+			qr.update(conn, sql, ebo.getEmailAddr(),ebo.getUserId());
+			DbUtils.commitAndCloseQuietly(conn); //提交事务并关闭连接
+		} catch (SQLException e) {
+
+			DbUtils.rollbackAndCloseQuietly(conn);//回滚事务并关闭连接
+
+			e.printStackTrace();
+		}
+	}
+
+		/**
+         * 根据ID获取该会员对象
+         * @param id 会员对象的ID
+         * @return 返回指定编号的会员对象
+         */
 	public Member findOne(Integer id){
 		Member member = null;
 		

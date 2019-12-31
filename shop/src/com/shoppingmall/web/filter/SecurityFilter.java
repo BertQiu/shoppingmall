@@ -23,10 +23,6 @@ import com.shoppingmall.entity.Member;
 public class SecurityFilter implements Filter {
 
 	@Override
-	public void destroy() {
-	}
-
-	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
 			throws IOException, ServletException {
 		

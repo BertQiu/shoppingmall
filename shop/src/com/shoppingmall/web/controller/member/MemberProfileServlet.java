@@ -29,14 +29,11 @@ public class MemberProfileServlet extends HttpServlet {
 		String nick_name = request.getParameter("nick_name");
 		String real_name = request.getParameter("real_name");
 		String genderStr = request.getParameter("gender");
-		String email = request.getParameter("email");
-		
-		
+
 		//step2: 处理业务逻辑
 		Member mbr = (Member)request.getSession().getAttribute("curr_mbr");
 		mbr.setNick_name(nick_name);
 		mbr.setReal_name(real_name);
-		mbr.setEmail(email);
 		mbr.setGender(Boolean.parseBoolean(genderStr));
 		
 		MemberDao service = new MemberDao();

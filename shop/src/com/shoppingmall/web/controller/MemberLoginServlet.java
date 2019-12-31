@@ -36,20 +36,24 @@ public class MemberLoginServlet extends HttpServlet {
 		//step1： 获取客户端提交的数据
 		String mobile = request.getParameter("mobile");
 		String pwd = request.getParameter("pwd");
-		
+		String captcha = request.getParameter("captcha");
+
 		//step2: 业务逻辑处理
-		
+		if (captcha == null || !captcha.toLowerCase().equals(request.getSession().getAttribute("login_captcha"))) {
+			request.setAttribute("msg", "验证码错误！");
+			request.getRequestDispatcher("/member_login.jsp").forward(request, response);
+			return;
+		}
 		
 		MemberDao service = new MemberDao();
 		Member mbr = service.findByMobile(mobile);
-		
-		//step3: 执行跳转
 		if(mbr != null){
 			if(mbr.getPwd().equals(pwd)){
 				//登录成功
 				//在会话中记录当前登录的会员信息
 				request.getSession().setAttribute("curr_mbr", mbr);
-				
+				request.getSession().removeAttribute("login_captcha");
+
 				//如果登录后的会员，有提交订单，跳转到/orders.jsp; 没有就跳转到会员的首页
 				Orders order = (Orders)request.getSession().getAttribute("curr_order");
 				if(order != null){
