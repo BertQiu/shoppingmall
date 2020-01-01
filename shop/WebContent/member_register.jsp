@@ -69,9 +69,21 @@
 
 <script>
     $("#registerForm").submit(function (e) {
+        var phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/;
+        if (!phoneReg.test($("#mobile").val())) {
+            alert("请输入正确的手机号码");
+            e.preventDefault();
+            return;
+        }
+        if ($("#password").val().trim() == "") {
+            alert("请输入密码！");
+            e.preventDefault();
+            return;
+        }
         if ($("#password").val() !== $("#password2").val()) {
             alert("两次密码不一致");
             e.preventDefault();
+            return;
         }
     });
 </script>
