@@ -102,7 +102,7 @@
 							<label class="col-xs-2 control-label">地址</label>
 							<div class="col-xs-9 required">
 								<input type="text" name="street" id="street" placeholder="详细地址"
-									class="form-control" />
+									class="form-control" autocomplete="off"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -163,8 +163,8 @@
 						<div class="form-group">
 							<label class="col-xs-2 control-label">地址</label>
 							<div class="col-xs-9 required">
-								<input type="text" name="street" id="street" placeholder="详细地址"
-									class="form-control" />
+								<input type="text" name="street" id="street2" placeholder="详细地址"
+									class="form-control" autocomplete="off"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -289,5 +289,77 @@
     		return false;
     	});
     </script>
+
+	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=5011b5814d58801a6fa9f2a096747907">
+	</script>
+	<script src="https://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+	<script type="text/javascript">
+        AMapUI.loadUI(['misc/PoiPicker'], function (PoiPicker) {
+
+            var poiPicker = new PoiPicker({
+                //city:'北京',
+                input: 'street'
+            });
+
+            //初始化poiPicker
+            poiPickerReady(poiPicker,"#street");
+        });
+
+        function poiPickerReady(poiPicker,domID) {
+            window.poiPicker = poiPicker;
+            var marker = new AMap.Marker();
+            var infoWindow = new AMap.InfoWindow({
+                offset: new AMap.Pixel(0, -20)
+            });
+
+            //选取了某个POI
+            poiPicker.on('poiPicked', function (poiResult) {
+
+                var source = poiResult.source,
+                    poi = poiResult.item,
+                    info = {
+                        source: source,
+                        id: poi.id,
+                        name: poi.name,
+                        location: poi.location.toString(),
+                        address: poi.address
+                    };
+                setAddrInputValue(info,domID)
+            });
+
+            poiPicker.onCityReady(function () {
+                poiPicker.suggest('美食');
+            });
+        }
+
+        function setAddrInputValue(locationInfo,domId) {
+            AMap.plugin('AMap.Geocoder', function () {
+                var geocoder = new AMap.Geocoder({
+                    // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
+                    city: '010'
+                });
+                geocoder.getAddress(locationInfo.location, function (status, result) {
+                    if (status === 'complete' && result.info === 'OK') {
+                        // result为对应的地理位置详细信息
+                    $(domId).val(result.regeocode.formattedAddress)
+                    }
+                })
+            })
+        }
+	</script>
+	<script type="text/javascript">
+        AMapUI.loadUI(['misc/PoiPicker'], function (PoiPicker) {
+
+            var poiPicker = new PoiPicker({
+                //city:'北京',
+                input: 'street2'
+            });
+
+            //初始化poiPicker
+            poiPickerReady(poiPicker,"#street2");
+        });
+
+	</script>
+
 </body>
 </html>
