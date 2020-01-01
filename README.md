@@ -1,5 +1,5 @@
 # shopping-mall
-基于Jsp/servlet的网上购物商城
+基于Jsp/servlet的网上购物商城  
 内嵌了支付宝sdk，可以模拟真实网购环境
 
 ---
