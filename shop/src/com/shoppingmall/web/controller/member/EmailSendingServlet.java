@@ -30,7 +30,7 @@ public class EmailSendingServlet extends HttpServlet {
             return;
         }
         Member curr_mbr = (Member) req.getSession().getAttribute("curr_mbr");
-        if (curr_mbr.getEmail().equals(email)) {
+        if (curr_mbr.getEmail()!=null && curr_mbr.getEmail().equals(email)) {
             req.setAttribute("email_binding_msg", "邮箱重复绑定！");
             req.getRequestDispatcher("/member/profile.jsp").forward(req, resp);
             return;
